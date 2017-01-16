@@ -8,23 +8,22 @@ $path = "uploads/"; // Upload directory
 $count = 0;
 if(isset($_GET) and $_SERVER['REQUEST_METHOD'] == "GET"){
 
-  $nodeIdDel = $_GET['del'];
-  
   if (isset($_GET['del'])) {
+    $nodeIdDel = $_GET['del'];
     $sql = "DELETE FROM esp WHERE id=$nodeIdDel";
     $db->exec($sql);
   }
-  $nodeIdUpd = $_GET['upd'];
   
   if (isset($_GET['upd'])) {
+    $nodeIdUpd = $_GET['upd'];
     $sql = "SELECT * FROM esp WHERE id=$nodeIdUpd";
     $sth = $db->prepare($sql);
     $sth->execute();
     $result = $sth->fetch(PDO::FETCH_ASSOC);
 
-    if ($result[update] == 1) {$val = 0;} else {$val = 1;}
+    if ($result['update'] == 1) {$val = 0;} else {$val = 1;}
 
-    $sql = "UPDATE esp SET `update`='$val' WHERE id=$nodeIdUpd";
+    $sql = "UPDATE esp SET update='$val' WHERE id=$nodeIdUpd";
     $db->exec($sql);
   }
 
@@ -40,8 +39,8 @@ if(isset($_POST) and $_SERVER['REQUEST_METHOD'] == "POST"){
       $sth->execute();
       $result = $sth->fetch(PDO::FETCH_ASSOC);
 
-      $r_folder = $result[folder];
-      $r_filename = $result[filename];
+      $r_folder = $result['folder'];
+      $r_filename = $result['filename'];
 
       $fn = "uploads/".$r_folder."/".$r_filename;
       $file = fopen($fn, "w"); 
@@ -63,12 +62,12 @@ if(isset($_POST) and $_SERVER['REQUEST_METHOD'] == "POST"){
         $sth = $db->prepare($sql);
         $sth->execute();
         $chip_id_fetch = $sth->fetch(PDO::FETCH_ASSOC);
-        $chipid = $chip_id_fetch[chip_id];
+        $chipid = $chip_id_fetch['chip_id'];
 
         } else {
 
         if (isset($_POST['edit'])) {
-            $sql = "UPDATE esp SET `name` = '$nodeName', `description` = '$nodeDesc', `chip_id` = '$chipid' WHERE id = $nodeEdit";
+            $sql = "UPDATE esp SET name = '$nodeName', description = '$nodeDesc', chip_id = '$chipid' WHERE id = $nodeEdit";
             $db->exec($sql);
         } else {
             $sql = "INSERT INTO esp (name,description,chip_id) VALUES ('$nodeName','$nodeDesc','$chipid')";
@@ -79,7 +78,7 @@ if(isset($_POST) and $_SERVER['REQUEST_METHOD'] == "POST"){
         $sth = $db->prepare($sql);
         $sth->execute();
         $esp_id_fetch = $sth->fetch(PDO::FETCH_ASSOC);
-        $esp_id = $esp_id_fetch[id];
+        $esp_id = $esp_id_fetch['id'];
         }
 
       foreach ($_FILES['files']['name'] as $f => $name) {     
@@ -176,28 +175,28 @@ if(isset($_POST) and $_SERVER['REQUEST_METHOD'] == "POST"){
 
     <div class="container">
       <?php
-        if (isset($_GET[files])) {
+        if (isset($_GET['files'])) {
 
-          $fileId = $_GET[files];
+          $fileId = $_GET['files'];
 
-          if (isset($_GET[boot])) {
-                  $file_id = $_GET[boot];
+          if (isset($_GET['boot'])) {
+                  $file_id = $_GET['boot'];
 
                   $sql = "SELECT * FROM data WHERE esp_id=$fileId";
                   $files = $db->query($sql);
                   foreach ($files as $value) {
-                      if ($file_id == $value[id]) {
-                          $sql = "UPDATE data SET `boot`=1 WHERE id=$value[id]";
+                      if ($file_id == $value['id']) {
+                          $sql = "UPDATE data SET boot=1 WHERE id=$value[id]";
                           $db->exec($sql);
                       } else {
-                          $sql = "UPDATE data SET `boot`=0 WHERE id=$value[id]";
+                          $sql = "UPDATE data SET boot=0 WHERE id=$value[id]";
                           $db->exec($sql);
                       }
                   }
           }
 
-          if (isset($_GET[delfile])) {
-                  $file_del = $_GET[delfile];
+          if (isset($_GET['delfile'])) {
+                  $file_del = $_GET['delfile'];
                   
                   $sql = "DELETE FROM data WHERE id=$file_del";
                   $db->exec($sql);
@@ -254,9 +253,9 @@ if(isset($_POST) and $_SERVER['REQUEST_METHOD'] == "POST"){
     
 
 <?php
-    if (isset($_GET[newnode]) || isset($_GET[edit]) ) {
+    if (isset($_GET['newnode']) || isset($_GET['edit']) ) {
 
-      if (isset($_GET[edit])) {
+      if (isset($_GET['edit'])) {
 
         $nodeIdUpd = $_GET['edit'];
   
@@ -265,9 +264,9 @@ if(isset($_POST) and $_SERVER['REQUEST_METHOD'] == "POST"){
         $sth->execute();
         $result = $sth->fetch(PDO::FETCH_ASSOC);
 
-        $r_name = $result[name];
-        $r_desc = $result[description];
-        $r_chipid = $result[chip_id];
+        $r_name = $result['name'];
+        $r_desc = $result['description'];
+        $r_chipid = $result['chip_id'];
       }
 
 
@@ -318,7 +317,7 @@ if(isset($_POST) and $_SERVER['REQUEST_METHOD'] == "POST"){
               </div>
             </div>";
 
-            if (isset($_GET[edit])) { echo "<input type='hidden' value=$nodeIdUpd name='edit' />";}
+            if (isset($_GET['edit'])) { echo "<input type='hidden' value=$nodeIdUpd name='edit' />";}
             echo "
 
         </form>
@@ -327,7 +326,7 @@ if(isset($_POST) and $_SERVER['REQUEST_METHOD'] == "POST"){
 ?>
 
 <?php
-    if (isset($_GET[editor])) {
+    if (isset($_GET['editor'])) {
 
         $fileId = $_GET['editor'];
   
@@ -336,9 +335,9 @@ if(isset($_POST) and $_SERVER['REQUEST_METHOD'] == "POST"){
         $sth->execute();
         $result = $sth->fetch(PDO::FETCH_ASSOC);
 
-        $r_folder = $result[folder];
-        $r_filename = $result[filename];
-        $r_espid = $result[esp_id];
+        $r_folder = $result['folder'];
+        $r_filename = $result['filename'];
+        $r_espid = $result['esp_id'];
 
         $fn = "uploads/".$r_folder."/".$r_filename;
         $file = fopen($fn, "a+"); 
