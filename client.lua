@@ -43,9 +43,8 @@ function dwn()
             file.open(v, "w+")
 
             payloadFound = false
-            conn=net.createConnection(net.TCP, false) 
-            conn:on("receive", function(conn, payload)
-
+            conn=net.createConnection(net.TCP, 0) 
+            conn:on("receive", function(sck, payload)
                 if (payloadFound == true) then
                     file.write(payload)
                     file.flush()
@@ -60,15 +59,16 @@ function dwn()
                 payload = nil
                 collectgarbage()
             end)
-            conn:on("disconnection", function(conn) 
-                conn = nil
+            conn:on("disconnection", function(sck) 
+                sck = nil
                 file.close()
-                ext = string.sub(v, -3)
-                if (ext == "lua") then
-                    node.compile(filename)
+                if (v~=nil) then
+                  ext = string.sub(v, -3)
+                  if (ext == "lua") then
+                      node.compile(filename)
+                  end
+                  dwn()
                 end
-                dwn()
-
             end)
             conn:on("connection", function(conn)
                 conn:send("GET /"..s.path.."/uploads/"..id.."/"..v.." HTTP/1.0\r\n"..
@@ -105,9 +105,8 @@ function FileList(sck,c)
             file.open(v, "w+")
 
             payloadFound = false
-            conn=net.createConnection(net.TCP, false) 
-            conn:on("receive", function(conn, payload)
-
+            conn=net.createConnection(net.TCP, 0) 
+            conn:on("receive", function(sck, payload)
                 if (payloadFound == true) then
                     file.write(payload)
                     file.flush()
@@ -122,17 +121,19 @@ function FileList(sck,c)
                 payload = nil
                 collectgarbage()
             end)
-            conn:on("disconnection", function(conn) 
-                conn = nil
+            conn:on("disconnection", function(sck) 
+                sck = nil
                 file.close()
-                ext = string.sub(v, -3)
-                if (ext == "lua") then
-                    node.compile(v)
+                if (v ~= nil) then
+                  ext = string.sub(v, -3)
+                  if (ext == "lua") then
+                      node.compile(v)
+                  end
                 end
                 dwn()
             end)
-            conn:on("connection", function(conn)
-                conn:send("GET /"..s.path.."/uploads/"..id.."/"..v.." HTTP/1.0\r\n"..
+            conn:on("connection", function(sck)
+                sck:send("GET /"..s.path.."/uploads/"..id.."/"..v.." HTTP/1.0\r\n"..
                       "Host: "..s.host.."\r\n"..
                       "Connection: close\r\n"..
                       "Accept-Charset: utf-8\r\n"..
@@ -141,10 +142,6 @@ function FileList(sck,c)
                       "Accept: */*\r\n\r\n")
             end)
             conn:connect(80,s.host)
-
-
-
-
     --end
     collectgarbage()
 
@@ -175,19 +172,19 @@ tmr.alarm (1, 1000, 1, function ( )
     print ("ip: " .. wifi.sta.getip ( ))
     tmr.stop (1)
     -- get list of files
-    sk=net.createConnection(net.TCP, 0)
-    sk:on("connection",function(conn, payload)
-                sk:send("GET /".. s.path .."/node.php?id="..id.."&list"..
-                " HTTP/1.1\r\n".. 
+    conn=net.createConnection(net.TCP, 0)
+    conn:on("connection",function(sck, payload)
+                sck:send("GET /".. s.path .."/node.php?id="..id.."&list"..
+                " HTTP/1.0\r\n".. 
                 "Host: "..s.domain.."\r\n"..
                 "Accept: */*\r\n"..
                 "User-Agent: Mozilla/4.0 (compatible; esp8266 Lua;)"..
                 "\r\n\r\n") 
             end)
-    sk:on("receive", FileList)
+    conn:on("receive", FileList)
     
     --sGet = "GET /".. s.path .. " HTTP/1.1\r\nHost: " .. s.domain .. "\r\nConnection: keep-alive\r\nAccept: */*\r\n\r\n"
-    sk:connect(80,s.host) 
+    conn:connect(80,s.host) 
     
   end
   collectgarbage()
