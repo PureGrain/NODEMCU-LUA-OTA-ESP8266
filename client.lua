@@ -156,8 +156,8 @@ wifi.setmode (wifi.STATION)
 wifi.sta.config(s.ssid, s.pwd)
 wifi.sta.autoconnect (1)
 
-iFail = 20 -- trying to connect to AP in 20sec, if not then reboot
-tmr.alarm (1, 1000, 1, function ( )
+iFail = 20 -- trying to connect to AP in 30sec, if not then reboot
+tmr.alarm (1, 1500, 1, function ( )
   iFail = iFail -1
   print(iFail)
   if (iFail == 0) then

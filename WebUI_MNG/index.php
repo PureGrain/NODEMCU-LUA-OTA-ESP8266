@@ -23,7 +23,7 @@ if(isset($_GET) and $_SERVER['REQUEST_METHOD'] == "GET"){
 
     if ($result['update'] == 1) {$val = 0;} else {$val = 1;}
 
-    $sql = "UPDATE esp SET update='$val' WHERE id=$nodeIdUpd";
+    $sql = "UPDATE esp SET `update`='$val' WHERE id=$nodeIdUpd";
     $db->exec($sql);
   }
 

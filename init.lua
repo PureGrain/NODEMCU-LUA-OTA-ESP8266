@@ -1,10 +1,12 @@
+SCRIPTNAME_CLIENT = "client.lua"
+
 function LoadX()
     s = {ssid="", pwd="", host="", domain="", path="", err="",boot="",update=0}
     if (file.open("s.txt","r")) then
         local sF = file.read()
         --print("setting: "..sF)
         file.close()
-        for k, v in string.gmatch(sF, "([%w.]+)=([%S ]+)") do    
+        for k, v in string.gmatch(sF, "([%w.]+)=([%S ]+)") do
             s[k] = v
             print(k .. ": " .. v)
         end
@@ -19,7 +21,7 @@ function SaveXY(sErr)
     file.open("s.txt","w+")
     for k, v in pairs(s) do
         file.writeline(k .. "=" .. v)
-    end                
+    end
     file.close()
     collectgarbage()
 end
@@ -38,7 +40,7 @@ conn=net.createConnection(net.TCP, 0)
             end)
 
     conn:on("receive", function(conn, payload)
-        if string.find(payload, "UPDATE")~=nil then 
+        if string.find(payload, "UPDATE")~=nil then
             s.boot=nil
             SaveXY()
             node.restart()
@@ -66,11 +68,19 @@ if (s.host~="") then
                 update()
             end)
     end
+    local fileFound
+    local filenameBoot
     if (s.boot~="") then
-        dofile(s.boot)
-    else    
-        dofile("client.lua")   
+      fileFound=io.open(s.boot, "r")
+      if (fileFound~=nil) then
+        filenameBoot = s.boot
+      else
+        filenameBoot = SCRIPTNAME_CLIENT
+      end
+    else
+        filenameBoot = SCRIPTNAME_CLIENT
     end
+    dofile(filenameBoot)
 else
-    dofile("server.lua")   
+    dofile("server.lua")
 end 
