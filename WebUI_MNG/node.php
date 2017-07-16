@@ -23,11 +23,11 @@ if (isset($_GET['update'])) {
     $sth = $db->prepare($sql);
     $sth->execute();
     $fetch = $sth->fetch(PDO::FETCH_ASSOC);
-    $result = $fetch[update];
+    $result = $fetch['updateReq'];
 
     if ($result == 1) {
         echo "UPDATE";
-        $sql = "UPDATE esp SET update=0 WHERE chip_id=$chipid";
+        $sql = "UPDATE esp SET updateReq=0 WHERE chip_id=$chipid";
         $db->exec($sql);
     } else {echo "";} 
 

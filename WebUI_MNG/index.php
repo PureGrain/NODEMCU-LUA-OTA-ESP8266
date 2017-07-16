@@ -21,9 +21,9 @@ if(isset($_GET) and $_SERVER['REQUEST_METHOD'] == "GET"){
     $sth->execute();
     $result = $sth->fetch(PDO::FETCH_ASSOC);
 
-    if ($result['update'] == 1) {$val = 0;} else {$val = 1;}
+    if ($result['updateReq'] == 1) {$val = 0;} else {$val = 1;}
 
-    $sql = "UPDATE esp SET `update`='$val' WHERE id=$nodeIdUpd";
+    $sql = "UPDATE esp SET `updateReq`='$val' WHERE id=$nodeIdUpd";
     $db->exec($sql);
   }
 
@@ -340,7 +340,7 @@ if(isset($_POST) and $_SERVER['REQUEST_METHOD'] == "POST"){
         $r_espid = $result['esp_id'];
 
         $fn = "uploads/".$r_folder."/".$r_filename;
-        $file = fopen($fn, "a+"); 
+        $file = fopen($fn, "a+");
         $size = filesize($fn); 
         $text = fread($file, $size); 
         fclose($file); 

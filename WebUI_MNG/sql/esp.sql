@@ -53,7 +53,7 @@ CREATE TABLE IF NOT EXISTS `esp` (
   `name` varchar(30) COLLATE utf8_bin NOT NULL,
   `chip_id` varchar(20) COLLATE utf8_bin NOT NULL,
   `description` varchar(500) COLLATE utf8_bin NOT NULL,
-  `update` int(11) NOT NULL DEFAULT '0',
+  `updateReq` int(11) NOT NULL DEFAULT '0',
   `heartbeat` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=19 ;
@@ -62,7 +62,7 @@ CREATE TABLE IF NOT EXISTS `esp` (
 -- Dumping data for table `esp`
 --
 
-INSERT INTO `esp` (`id`, `name`, `chip_id`, `description`, `update`, `heartbeat`) VALUES
+INSERT INTO `esp` (`id`, `name`, `chip_id`, `description`, `updateReq`, `heartbeat`) VALUES
 (18, 'testing node', '8775412', 'very first testing node', 0, '2016-10-21 18:07:43');
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
