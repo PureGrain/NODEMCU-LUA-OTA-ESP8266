@@ -2,16 +2,52 @@
     require("config.php"); 
 
 
+function dir_is_empty($dir) {
+  $handle = opendir($dir);
+  while (false !== ($entry = readdir($handle))) {
+    if ($entry != "." && $entry != "..") {
+      return FALSE;
+    }
+  }
+  return TRUE;
+}
+
 $valid_formats = array("lua", "txt", "mono", "html", "htm");
 $max_file_size = 1024*100; //100 kb
 $path = "uploads/"; // Upload directory
 $count = 0;
 if(isset($_GET) and $_SERVER['REQUEST_METHOD'] == "GET"){
 
+  /*
+     Delete a node and its files
+   */
   if (isset($_GET['del'])) {
-    $nodeIdDel = $_GET['del'];
-    $sql = "DELETE FROM esp WHERE id=$nodeIdDel";
-    $db->exec($sql);
+      // Delete the ESP and also any files associated with it
+      $nodeIdDel = $_GET['del'];
+      $sql = "DELETE FROM esp WHERE id=$nodeIdDel";
+      $db->exec($sql);
+
+      // Get info about physical storage
+      $sql = "SELECT * FROM data WHERE esp_id=$nodeIdDel";
+      $sth = $db->prepare($sql);
+      $sth->execute();
+      // Delete each file from storage
+      while($result = $sth->fetch(PDO::FETCH_ASSOC)) {
+        $r_folder = $result['folder'];
+        $r_filename = $result['filename'];
+        $fn = $path.$r_folder."/".$r_filename;
+        unlink($fn);
+      }
+
+      // Attempt to delete directory if empty
+      $dirToDelete = $path.$r_folder;
+      if(dir_is_empty($dirToDelete)) {
+         rmdir($dirToDelete);
+      }
+
+      // Delete all references of the files from backend
+      $sql = "DELETE FROM data WHERE esp_id=$nodeIdDel";
+      $db->exec($sql);
   }
   
   if (isset($_GET['upd'])) {
