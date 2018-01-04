@@ -1,3 +1,5 @@
+This is a fork from SvenLuebke/NODEMCU-LUA-OTA-ESP8266 which already has a couple of improvements over the original version from kovi44.
+
 # ESPLoader v2
 
 I was really inspired by Robo Durden and his nice work - ESPLoader - https://github.com/RoboDurden/ESPLoad
