@@ -85,7 +85,7 @@ function dwn()
 end
 
 function FileList(sck,c)
-    print "initialized"
+    print "Received filelist"
     local nStart, nEnd = string.find(c, "\n\n")
     if (nEnde == nil) then
         nStart, nEnd = string.find(c, "\r\n\r\n")
@@ -95,9 +95,9 @@ function FileList(sck,c)
 
     data = mysplit(c, "\n") -- fill the field with filenames
     
-    --for k,v in pairs(data) do
-    n = 1
-    v = data[n]
+    for k,v in pairs(data) do
+    --n = 1
+    --v = data[n]
         print("Filename: "..v)
         filename=v
         
@@ -142,7 +142,7 @@ function FileList(sck,c)
                       "Accept: */*\r\n\r\n")
             end)
             conn:connect(80,s.host)
-    --end
+    end
     collectgarbage()
 
 end
@@ -153,7 +153,7 @@ filename=nil
 LoadX()
 
 wifi.setmode (wifi.STATION)
-wifi.sta.config(s.ssid, s.pwd)
+wifi.sta.config({ssid=s.ssid, pwd=s.pwd})
 wifi.sta.autoconnect (1)
 
 iFail = 20 -- trying to connect to AP in 30sec, if not then reboot
@@ -172,6 +172,9 @@ tmr.alarm (1, 1500, 1, function ( )
     print ("ip: " .. wifi.sta.getip ( ))
     tmr.stop (1)
     -- get list of files
+
+    print("Requesting files from server...")
+    
     conn=net.createConnection(net.TCP, 0)
     conn:on("connection",function(sck, payload)
                 sck:send("GET /".. s.path .."/node.php?id="..id.."&list"..
