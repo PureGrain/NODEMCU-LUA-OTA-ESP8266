@@ -8,7 +8,7 @@ function LoadX()
         file.close()
         for k, v in string.gmatch(sF, "([%w.]+)=([%S ]+)") do
             s[k] = v
-            print(k .. ": " .. v)
+            --print(k .. ": " .. v)
         end
     end
 end
@@ -60,8 +60,11 @@ print ("nodeID is: "..id)
 print(collectgarbage("count").." kB used")
 LoadX()
 
+-- run the correct application
+-- if the settings are correct, either load the default client
+-- or run the set boot file that was uploaded
+-- if settings are insufficient, run the server to connect to wifi
 if (s.host~="") then
---if (s.host and s.domain and s.path) then
     if (tonumber(s.update)>0) then
         tmr.alarm (0, tonumber(s.update)*60000, 1, function()
                 print("checking for update")
@@ -70,11 +73,13 @@ if (s.host~="") then
     end
     local fileFound
     local filenameBoot
+    -- check if the boot setting is present and try to load the file
     if (s.boot~="") then
-      fileFound=io.open(s.boot, "r")
-      if (fileFound~=nil) then
+      fileFound=file.exists(s.boot)
+      if (fileFound) then
         filenameBoot = s.boot
       else
+        -- file is set but was wrong, load default
         filenameBoot = SCRIPTNAME_CLIENT
       end
     else
