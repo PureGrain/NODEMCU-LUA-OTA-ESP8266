@@ -1,3 +1,9 @@
+# PureGrain Version that works as of now.
+
+Moduels from NodeMCU: file,gpio,http,i2c,net,node,tmr,uart,wifi,tls
+
+Everything is working okay for me right now besides having to change the line in the config.lua (n = n + 1) <-- that was throwing an error.
+
 This is a fork from SvenLuebke/NODEMCU-LUA-OTA-ESP8266 which already has a couple of improvements over the original version from kovi44.
 
 # ESPLoader v2
