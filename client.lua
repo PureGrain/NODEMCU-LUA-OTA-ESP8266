@@ -26,7 +26,7 @@ end
 
 function dwn()
     -- body
-    n = n + 1
+    n = 2
     v = data[n]
     if v == nil then 
         --dofile(data[1]..".lc")
